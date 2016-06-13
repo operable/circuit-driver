@@ -8,6 +8,7 @@ import (
 )
 
 type ExecRequest struct {
+	Die        bool
 	Executable string
 	Args       []string
 	Options    map[string]string

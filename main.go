@@ -22,6 +22,9 @@ func main() {
 		if err := decoder.Decode(&request); err != nil {
 			os.Exit(ExitBadRead)
 		}
+		if request.Die == true {
+			os.Exit(0)
+		}
 		execResult, err := executeRequest(request)
 		encodeErr := encoder.Encode(execResult)
 		if err != nil {
