@@ -1,0 +1,4 @@
+**/flymake*
+**/\.#*
+**/*.test
+_build
