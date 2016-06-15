@@ -6,12 +6,12 @@ EXE_FILE                    := $(BUILD_DIR)/circuit-driver
 
 .PHONY: all test exe clean docker vet
 
-all: Makefile test exe
+all: Makefile test vet exe
 
 test:
 	@go test -cover $(PKGS)
 
-exe: vet $(BUILD_DIR)
+exe: $(BUILD_DIR)
 	go build -o $(EXE_FILE) github.com/operable/circuit-driver
 
 vet:
