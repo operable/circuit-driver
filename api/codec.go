@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/gob"
+	circuit "github.com/operable/circuit-driver/io"
 	"io"
 )
 
@@ -15,7 +16,7 @@ type Encoder struct {
 // around a base io.Writer
 func WrapEncoder(w io.Writer) Encoder {
 	return Encoder{
-		encoder: gob.NewEncoder(NewCircuitWriter(w)),
+		encoder: gob.NewEncoder(circuit.NewCircuitWriter(w)),
 	}
 }
 
@@ -45,7 +46,7 @@ type Decoder struct {
 // around a base io.Reader
 func WrapDecoder(r io.Reader) Decoder {
 	return Decoder{
-		decoder: gob.NewDecoder(NewCircuitReader(r)),
+		decoder: gob.NewDecoder(circuit.NewCircuitReader(r)),
 	}
 }
 
