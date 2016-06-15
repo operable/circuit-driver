@@ -2,42 +2,58 @@ package main
 
 import (
 	"bytes"
-	"github.com/operable/circuit-driver/protocol"
+	"fmt"
+	"github.com/operable/circuit-driver/api"
+	"github.com/operable/circuit-driver/util"
 	"os"
 	"os/exec"
 	"time"
 )
 
 const (
-	ExitBadRead  = 2
-	ExitBadExec  = 3
-	ExitBadWrite = 4
+	ExitBadLogger = 1
+	ExitBadRead
+	ExitBadExec
+	ExitBadWrite
 )
 
 func main() {
-	decoder := protocol.WrapDecoder(os.Stdin)
-	encoder := protocol.WrapEncoder(os.Stdout)
+	inputLogger, err := util.NewDataLogger("/var/log/", util.LogInput, time.Now())
+	if err != nil {
+		os.Exit(ExitBadLogger)
+	}
+	outputLogger, err := util.NewDataLogger("/var/log", util.LogOutput, time.Now())
+	if err != nil {
+		os.Exit(ExitBadLogger)
+	}
+	decoder := api.WrapDecoder(os.Stdin)
+	encoder := api.WrapEncoder(os.Stdout)
 	for {
-		var request protocol.ExecRequest
-		if err := decoder.Decode(&request); err != nil {
-			os.Exit(ExitBadRead)
+		var request api.ExecRequest
+		if err := decoder.DecodeRequest(&request); err != nil {
+			inputLogger.WriteString(fmt.Sprintf("Error: %s\n", err))
+			//			os.Exit(ExitBadRead)
 		}
+		inputLogger.WriteString(fmt.Sprintf("request: %+v\n", request))
 		if request.Die == true {
 			os.Exit(0)
 		}
 		execResult, err := executeRequest(request)
-		encodeErr := encoder.Encode(execResult)
+		outputLogger.WriteString(fmt.Sprintf("result: %+v\n", execResult))
+		encodeErr := encoder.EncodeResult(&execResult)
 		if err != nil {
-			os.Exit(ExitBadExec)
+			outputLogger.WriteString(fmt.Sprintf("Exec error: %s\n", err))
+			//			os.Exit(ExitBadExec)
 		}
 		if encodeErr != nil {
-			os.Exit(ExitBadWrite)
+			outputLogger.WriteString(fmt.Sprintf("Write error: %s\n", err))
+			//			os.Exit(ExitBadWrite)
 		}
 
 	}
 }
 
-func executeRequest(request protocol.ExecRequest) (protocol.ExecResult, error) {
+func executeRequest(request api.ExecRequest) (api.ExecResult, error) {
 	command := request.ToExecCommand()
 	stdout := bytes.NewBuffer([]byte{})
 	stderr := bytes.NewBuffer([]byte{})
@@ -46,7 +62,7 @@ func executeRequest(request protocol.ExecRequest) (protocol.ExecResult, error) {
 	start := time.Now()
 	err := command.Run()
 	finish := time.Now()
-	result := protocol.ExecResult{
+	result := api.ExecResult{
 		Stdout:  stdout.Bytes(),
 		Stderr:  stderr.Bytes(),
 		Elapsed: finish.Sub(start),
@@ -60,6 +76,8 @@ func executeRequest(request protocol.ExecRequest) (protocol.ExecResult, error) {
 			result.Success = false
 			return result, err
 		}
+	} else {
+		result.Success = true
 	}
 	return result, nil
 }

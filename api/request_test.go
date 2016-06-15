@@ -1,4 +1,4 @@
-package protocol
+package api
 
 import (
 	"bytes"
@@ -12,8 +12,8 @@ func TestRequestEncode(t *testing.T) {
 	var request ExecRequest
 	request.Executable = "/bin/date"
 	var request2 ExecRequest
-	enc.Encode(request)
-	dec.Decode(&request2)
+	enc.EncodeRequest(&request)
+	dec.DecodeRequest(&request2)
 	if request2.Executable != request.Executable {
 		t.Errorf("Expected decoded Executable field to be %s: %s", request.Executable,
 			request2.Executable)
