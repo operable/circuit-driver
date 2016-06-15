@@ -8,6 +8,8 @@ import (
 	"io/ioutil"
 )
 
+var EOF = io.EOF
+
 func CircuitHeaderParser(reader io.Reader) (uint32, bool, error) {
 	prefix := make([]byte, 4)
 	count, err := io.ReadFull(reader, prefix)
