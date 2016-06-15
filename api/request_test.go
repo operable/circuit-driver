@@ -18,7 +18,7 @@ func TestRequestEncode(t *testing.T) {
 		t.Errorf("Expected decoded Executable field to be %s: %s", request.Executable,
 			request2.Executable)
 	}
-	if len(request2.Args) != 0 {
-		t.Errorf("Expected args to be empty")
+	if len(request2.Env) != len(request.Env) {
+		t.Errorf("Input env != output: %d; %d", len(request.Env), len(request2.Env))
 	}
 }

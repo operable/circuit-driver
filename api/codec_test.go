@@ -10,7 +10,6 @@ func TestEncode(t *testing.T) {
 	epl := WrapEncoder(&buf)
 	var td ExecRequest
 	td.Executable = "/bin/sayit"
-	td.Args = []string{"hello", "world"}
 	err := epl.EncodeRequest(&td)
 	if err != nil {
 		t.Error(err)
@@ -26,7 +25,9 @@ func TestDecode(t *testing.T) {
 	var requestIn, requestOut ExecRequest
 	epl := WrapEncoder(&buf)
 	requestIn.Executable = "/bin/sayit"
-	requestIn.Args = []string{"how", "now", "brown", "cow"}
+	requestIn.Env = map[string]interface{}{
+		"FOO": 123,
+	}
 	if err := epl.EncodeRequest(&requestIn); err != nil {
 		t.Error(err)
 	}
@@ -38,11 +39,10 @@ func TestDecode(t *testing.T) {
 	if requestOut.Executable != requestIn.Executable {
 		t.Errorf("Unexpected Executable value: %s", requestOut.Executable)
 	}
-	if len(requestOut.Args) != 4 {
-		t.Errorf("Unexpected args length: %d", len(requestOut.Args))
+	if len(requestOut.Env) != 1 {
+		t.Errorf("Unexpected env length: %d", len(requestOut.Env))
 	}
-	if requestOut.Args[0] != "how" || requestOut.Args[1] != "now" ||
-		requestOut.Args[2] != "brown" || requestOut.Args[3] != "cow" {
-		t.Errorf("Unexpected payload: %v", requestOut.Args)
+	if requestOut.Env["FOO"] != 123 {
+		t.Errorf("Unexpected payload: %v", requestOut.Env)
 	}
 }
