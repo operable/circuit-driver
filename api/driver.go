@@ -8,13 +8,13 @@ import (
 
 // Driver is the command execution interface
 type Driver interface {
-	Run(ExecRequest) (ExecResult, error)
+	Run(*ExecRequest) (ExecResult, error)
 }
 
 // BlockingDriver executes requests one-at-a-time
 type BlockingDriver struct{}
 
-func (bd BlockingDriver) Run(request ExecRequest) (ExecResult, error) {
+func (bd BlockingDriver) Run(request *ExecRequest) (ExecResult, error) {
 	command := request.ToExecCommand()
 	stdout := bytes.NewBuffer([]byte{})
 	stderr := bytes.NewBuffer([]byte{})

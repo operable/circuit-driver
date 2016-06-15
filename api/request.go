@@ -10,13 +10,19 @@ import (
 type ExecRequest struct {
 	Die        bool
 	Executable string
-	Env        map[string]interface{}
+	Env        map[string]string
 	Stdin      []byte
+}
+
+func NewExecRequest() *ExecRequest {
+	return &ExecRequest{
+		Env: make(map[string]string),
+	}
 }
 
 // ToExecCommand builds a Go os/exec.Cmd from a source
 // ExecRequest
-func (er ExecRequest) ToExecCommand() exec.Cmd {
+func (er *ExecRequest) ToExecCommand() exec.Cmd {
 	var command exec.Cmd
 	command.Path = er.Executable
 	command.Env = er.convertEnv()
@@ -24,7 +30,7 @@ func (er ExecRequest) ToExecCommand() exec.Cmd {
 	return command
 }
 
-func (er ExecRequest) convertEnv() []string {
+func (er *ExecRequest) convertEnv() []string {
 	retval := []string{}
 	for k, v := range er.Env {
 		retval = append(retval, fmt.Sprintf("%s=%v", k, v))

@@ -8,9 +8,9 @@ import (
 func TestEncode(t *testing.T) {
 	var buf bytes.Buffer
 	epl := WrapEncoder(&buf)
-	var td ExecRequest
+	td := NewExecRequest()
 	td.Executable = "/bin/sayit"
-	err := epl.EncodeRequest(&td)
+	err := epl.EncodeRequest(td)
 	if err != nil {
 		t.Error(err)
 	}
@@ -22,13 +22,12 @@ func TestEncode(t *testing.T) {
 
 func TestDecode(t *testing.T) {
 	var buf bytes.Buffer
-	var requestIn, requestOut ExecRequest
+	var requestOut ExecRequest
+	requestIn := NewExecRequest()
 	epl := WrapEncoder(&buf)
 	requestIn.Executable = "/bin/sayit"
-	requestIn.Env = map[string]interface{}{
-		"FOO": 123,
-	}
-	if err := epl.EncodeRequest(&requestIn); err != nil {
+	requestIn.Env["FOO"] = "123"
+	if err := epl.EncodeRequest(requestIn); err != nil {
 		t.Error(err)
 	}
 	dpl := WrapDecoder(&buf)
@@ -42,7 +41,7 @@ func TestDecode(t *testing.T) {
 	if len(requestOut.Env) != 1 {
 		t.Errorf("Unexpected env length: %d", len(requestOut.Env))
 	}
-	if requestOut.Env["FOO"] != 123 {
+	if requestOut.Env["FOO"] != "123" {
 		t.Errorf("Unexpected payload: %v", requestOut.Env)
 	}
 }

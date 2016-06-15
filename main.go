@@ -24,7 +24,7 @@ func main() {
 		if request.Die == true {
 			os.Exit(0)
 		}
-		execResult, err := driver.Run(request)
+		execResult, err := driver.Run(&request)
 		encodeErr := encoder.EncodeResult(&execResult)
 		if err != nil {
 			os.Exit(ExitBadExec)
