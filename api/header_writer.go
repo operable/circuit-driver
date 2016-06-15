@@ -3,7 +3,6 @@ package api
 import (
 	"bytes"
 	"encoding/binary"
-	"fmt"
 	"io"
 )
 
@@ -70,7 +69,6 @@ func (hw HeaderWriter) Write(p []byte) (int, error) {
 	buf.Grow(headerSize + len(p))
 	buf.Write(header)
 	buf.Write(p)
-	fmt.Printf("Writing: %v\n", buf.Bytes())
 	count, err := hw.writeAll(buf.Bytes())
 	if count > len(header) {
 		count -= headerSize
