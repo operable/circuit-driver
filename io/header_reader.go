@@ -66,7 +66,7 @@ func NewDockerStderrReader(reader io.Reader) io.Reader {
 }
 
 func (hr HeaderReader) Read(p []byte) (int, error) {
-	if len(p) > hr.buffer.Len() {
+	if hr.buffer.Len() == 0 {
 		count, err := hr.refill()
 		if err != nil && err != io.EOF {
 			return count, err
