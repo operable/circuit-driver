@@ -21,7 +21,7 @@ func main() {
 		if err := decoder.DecodeRequest(&request); err != nil {
 			os.Exit(ExitBadRead)
 		}
-		if request.Die == true {
+		if request.GetDie() == true {
 			os.Exit(0)
 		}
 		execResult, err := driver.Run(&request)

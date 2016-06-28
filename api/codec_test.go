@@ -2,6 +2,7 @@ package api
 
 import (
 	"bytes"
+	"fmt"
 	"testing"
 )
 
@@ -9,11 +10,12 @@ func TestEncode(t *testing.T) {
 	var buf bytes.Buffer
 	epl := WrapEncoder(&buf)
 	td := NewExecRequest()
-	td.Executable = "/bin/sayit"
+	td.SetExecutable("/bin/sayit")
 	err := epl.EncodeRequest(td)
 	if err != nil {
 		t.Error(err)
 	}
+	fmt.Printf("Serialized to %d bytes\n", buf.Len())
 	data := buf.Bytes()
 	if len(data) < 5 {
 		t.Errorf("Unexpected data size: %d", len(data))
@@ -25,8 +27,8 @@ func TestDecode(t *testing.T) {
 	var requestOut ExecRequest
 	requestIn := NewExecRequest()
 	epl := WrapEncoder(&buf)
-	requestIn.Executable = "/bin/sayit"
-	requestIn.Env["FOO"] = "123"
+	requestIn.SetExecutable("/bin/sayit")
+	requestIn.PutEnv("FOO", "123")
 	if err := epl.EncodeRequest(requestIn); err != nil {
 		t.Error(err)
 	}
@@ -35,13 +37,13 @@ func TestDecode(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	if requestOut.Executable != requestIn.Executable {
+	if requestOut.GetExecutable() != requestIn.GetExecutable() {
 		t.Errorf("Unexpected Executable value: %s", requestOut.Executable)
 	}
 	if len(requestOut.Env) != 1 {
 		t.Errorf("Unexpected env length: %d", len(requestOut.Env))
 	}
-	if requestOut.Env["FOO"] != "123" {
+	if requestOut.FindEnv("FOO") != "123" {
 		t.Errorf("Unexpected payload: %v", requestOut.Env)
 	}
 }
