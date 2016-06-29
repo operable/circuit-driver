@@ -24,21 +24,21 @@ func (bd BlockingDriver) Run(request *ExecRequest) (ExecResult, error) {
 	err := command.Run()
 	finish := time.Now()
 	result := ExecResult{
-		Stdout:  stdout.Bytes(),
-		Stderr:  stderr.Bytes(),
-		Elapsed: finish.Sub(start),
+		Stdout: stdout.Bytes(),
+		Stderr: stderr.Bytes(),
 	}
+	result.SetElapsed(finish.Sub(start))
 	if err != nil {
 		switch execErr := err.(type) {
 		case *exec.ExitError:
-			result.Success = execErr.Success()
+			result.SetSuccess(execErr.Success())
 			return result, nil
 		default:
-			result.Success = false
+			result.SetSuccess(false)
 			return result, err
 		}
 	} else {
-		result.Success = true
+		result.SetSuccess(true)
 	}
 	return result, nil
 }
