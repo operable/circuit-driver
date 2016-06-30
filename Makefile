@@ -5,6 +5,7 @@ PKG_DIRS                    := $(shell find . -not -path '*/\.*' -type d | grep 
 PKGS                        := $(TOP_PKG) $(subst ., $(TOP_PKG), $(PKG_DIRS))
 BUILD_DIR                    = _build
 EXE_FILE                    := $(BUILD_DIR)/circuit-driver
+DOCKER_IMAGE                ?= "operable/circuit-driver:dev"
 
 # protobuf tooling
 PROTOC_BIN                  := $(shell which protoc)
@@ -37,7 +38,7 @@ tools: $(GOFAST_PROTOC_BIN)
 docker:
 	make clean
 	GOOS=linux GOARCH=amd64 make exe
-	docker build -t operable/circuit-driver .
+	docker build -t $(DOCKER_IMAGE) .
 
 pb-clean:
 	rm -f api/*.pb.go
