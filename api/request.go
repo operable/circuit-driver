@@ -54,7 +54,7 @@ func (er *ExecRequest) ToExecCommand() exec.Cmd {
 func (er *ExecRequest) convertEnv() []string {
 	retval := []string{}
 	for _, kv := range er.Env {
-		retval = append(retval, fmt.Sprintf("%s=%v", kv.Name, kv.Value))
+		retval = append(retval, fmt.Sprintf("%s=%v", kv.GetName(), kv.GetValue()))
 	}
 	return retval
 }
