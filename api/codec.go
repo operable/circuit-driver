@@ -3,6 +3,7 @@ package api
 import (
 	"bytes"
 	"encoding/gob"
+	"github.com/golang/snappy"
 	circuit "github.com/operable/circuit-driver/io"
 	"io"
 )
@@ -17,7 +18,7 @@ type Encoder struct {
 // Encoder configures an Encoder and Writer instance
 // around a base io.Writer
 func WrapEncoder(w io.Writer) Encoder {
-	writer := circuit.NewCircuitWriter(w)
+	writer := circuit.NewCircuitWriter(snappy.NewWriter(w))
 	return Encoder{
 		writer:  writer,
 		encoder: gob.NewEncoder(writer),
@@ -56,7 +57,7 @@ type Decoder struct {
 // WrapDecoder configures a Decoder and Reader instance
 // around a base io.Reader
 func WrapDecoder(r io.Reader) Decoder {
-	reader := circuit.NewCircuitReader(r)
+	reader := circuit.NewCircuitReader(snappy.NewReader(r))
 	return Decoder{
 		reader:  reader,
 		decoder: gob.NewDecoder(reader),
