@@ -2,7 +2,7 @@ package api
 
 import (
 	"bytes"
-	"os/exec"
+	"regexp"
 	"time"
 )
 
@@ -14,31 +14,25 @@ type Driver interface {
 // BlockingDriver executes requests one-at-a-time
 type BlockingDriver struct{}
 
+var forkExecPrefix = regexp.MustCompile("^fork/exec ")
+
 func (bd BlockingDriver) Run(request *ExecRequest) (ExecResult, error) {
 	command := request.ToExecCommand()
-	stdout := bytes.NewBuffer([]byte{})
-	stderr := bytes.NewBuffer([]byte{})
-	command.Stdout = stdout
-	command.Stderr = stderr
+	var stdout, stderr bytes.Buffer
+	command.Stdout = &stdout
+	command.Stderr = &stderr
 	start := time.Now()
 	err := command.Run()
 	finish := time.Now()
-	result := ExecResult{
-		Stdout: stdout.Bytes(),
-		Stderr: stderr.Bytes(),
-	}
+	result := ExecResult{}
 	result.SetElapsed(finish.Sub(start))
 	if err != nil {
-		switch execErr := err.(type) {
-		case *exec.ExitError:
-			result.SetSuccess(execErr.Success())
-			return result, nil
-		default:
-			result.SetSuccess(false)
-			return result, err
-		}
+		stderr.WriteString(forkExecPrefix.ReplaceAllString(err.Error(), ""))
+		result.SetSuccess(false)
 	} else {
 		result.SetSuccess(true)
 	}
+	result.Stderr = stderr.Bytes()
+	result.Stdout = stdout.Bytes()
 	return result, nil
 }
