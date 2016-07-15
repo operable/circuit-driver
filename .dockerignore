@@ -1,2 +1,6 @@
 *
-!_build/circuit-driver
+!api
+!io
+!util
+!main.go
+!Makefile

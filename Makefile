@@ -8,6 +8,7 @@ EXE_FILE                    := $(BUILD_DIR)/circuit-driver
 DOCKER_IMAGE                ?= "operable/circuit-driver:dev"
 
 # protobuf tooling
+ifdef BUILD_PROTO
 PROTOC_BIN                  := $(shell which protoc)
 PROTOC_DIR                  := $(dir $(PROTOC_BIN))
 PROTO_ROOT                  := $(abspath $(addsuffix .., $(addprefix $(PROTOC_DIR), $(dir $(shell readlink -n $(PROTOC_BIN))))))
@@ -15,6 +16,7 @@ PROTO_ROOT_INCLUDE          := $(addsuffix /include/, $(PROTO_ROOT))
 GOFAST_PROTOC_BIN           := $(GOBIN_DIR)/protoc-gen-gofast
 DRIVER_PROTO_PATH           := $(TOP_PKG)/api
 PROTO_INCLUDES              := --proto_path=$(PROTO_ROOT_INCLUDE):$(GOSRC_DIR):$(DRIVER_PROTO_PATH)
+endif
 
 .PHONY: all test exe clean docker vet tools pb
 
@@ -24,6 +26,8 @@ test:
 	@go test -cover $(PKGS)
 
 exe: $(BUILD_DIR)
+	go get -d github.com/golang/protobuf/proto
+	go get -d github.com/gogo/protobuf/gogoproto
 	go build -o $(EXE_FILE) github.com/operable/circuit-driver
 
 vet:
