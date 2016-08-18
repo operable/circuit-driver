@@ -22,3 +22,15 @@ func TestRequestEncode(t *testing.T) {
 		t.Errorf("Input env != output: %d; %d", len(request.Env), len(request2.Env))
 	}
 }
+
+func TestEnvVars(t *testing.T) {
+	var request ExecRequest
+	request.PutEnv("foo", "bar")
+	request.PutEnv("bar", "foo baz")
+	if request.FindEnv("foo") != "bar" {
+		t.Errorf("Expected env var value for foo to be bar: %s", request.FindEnv("foo"))
+	}
+	if request.FindEnv("bar") != "\"foo baz\"" {
+		t.Errorf("Expected env var value for bar to be \"foo baz\": %s", request.FindEnv("bar"))
+	}
+}
