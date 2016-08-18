@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"os/exec"
+	"strings"
 )
 
 func NewExecRequest() *ExecRequest {
@@ -22,6 +23,10 @@ func (er *ExecRequest) FindEnv(name string) string {
 }
 
 func (er *ExecRequest) PutEnv(name, value string) {
+	// Wrap value in quotes if it contains a space
+	if strings.IndexAny(" ", value) > -1 {
+		value = fmt.Sprintf("\"%s\"", value)
+	}
 	ev := new(EnvVar)
 	ev.Name = &name
 	ev.Value = &value
