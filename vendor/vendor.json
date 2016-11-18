@@ -1,0 +1,31 @@
+{
+	"comment": "",
+	"ignore": "test",
+	"package": [
+		{
+			"checksumSHA1": "aXC93Lo0MY4HRMSF7ANJ97VtulM=",
+			"path": "github.com/gogo/protobuf/gogoproto",
+			"revision": "a9cd0c35b97daf74d0ebf3514c5254814b2703b4",
+			"revisionTime": "2016-10-27T06:27:45Z"
+		},
+		{
+			"checksumSHA1": "2eIRbxeMUEF1ZnOanJhXmFR7pFs=",
+			"path": "github.com/gogo/protobuf/proto",
+			"revision": "a9cd0c35b97daf74d0ebf3514c5254814b2703b4",
+			"revisionTime": "2016-10-27T06:27:45Z"
+		},
+		{
+			"checksumSHA1": "zVCBnBzjkmL1Gkll/7IbpKKprmw=",
+			"path": "github.com/gogo/protobuf/protoc-gen-gogo/descriptor",
+			"revision": "a9cd0c35b97daf74d0ebf3514c5254814b2703b4",
+			"revisionTime": "2016-10-27T06:27:45Z"
+		},
+		{
+			"checksumSHA1": "SVXOQdpDBh0ihdZ5aIflgdA+Rpw=",
+			"path": "github.com/golang/protobuf/proto",
+			"revision": "98fa357170587e470c5f27d3c3ea0947b71eb455",
+			"revisionTime": "2016-10-12T20:53:35Z"
+		}
+	],
+	"rootPath": "github.com/operable/circuit-driver"
+}
