@@ -1,54 +1,49 @@
-GOBIN_DIR                   := $(addsuffix /bin, $(shell go env GOPATH))
-GOSRC_DIR                   := $(addsuffix /src, $(shell go env GOPATH))
-TOP_PKG                      = github.com/operable/circuit-driver
-PKG_DIRS                    := $(shell find . -not -path '*/\.*' -type d | grep -v _build | sort)
-PKGS                        := $(TOP_PKG) $(subst ., $(TOP_PKG), $(PKG_DIRS))
-BUILD_DIR                    = _build
-EXE_FILE                    := $(BUILD_DIR)/circuit-driver
-DOCKER_IMAGE                ?= "operable/circuit-driver:dev"
+BUILD_DIR    := _build
+EXE_FILE     := $(BUILD_DIR)/circuit-driver
+DOCKER_IMAGE ?= "operable/circuit-driver:dev"
 
 # protobuf tooling
-PROTOC_BIN                  := $(shell which protoc)
-PROTOC_DIR                  := $(dir $(PROTOC_BIN))
-PROTO_ROOT                  := $(abspath $(addsuffix .., $(addprefix $(PROTOC_DIR), $(dir $(shell readlink -n $(PROTOC_BIN))))))
-PROTO_ROOT_INCLUDE          := $(addsuffix /include/, $(PROTO_ROOT))
-GOFAST_PROTOC_BIN           := $(GOBIN_DIR)/protoc-gen-gofast
-DRIVER_PROTO_PATH           := $(TOP_PKG)/api
-PROTO_INCLUDES              := --proto_path=$(PROTO_ROOT_INCLUDE):$(GOSRC_DIR):$(DRIVER_PROTO_PATH)
+PROTOC_BIN         := $(shell which protoc)
+PROTOC_DIR         := $(dir $(PROTOC_BIN))
+PROTO_ROOT         := $(abspath $(addsuffix .., $(addprefix $(PROTOC_DIR), $(dir $(shell readlink -n $(PROTOC_BIN))))))
+PROTO_ROOT_INCLUDE := $(addsuffix /include/, $(PROTO_ROOT))
 
-.PHONY: all test exe clean docker vet tools pb
+# TODO This only works if GOPATH is a single directory
+GOBIN_DIR          := $(addsuffix /bin, $(shell go env GOPATH))
+GOFAST_PROTOC_BIN  := $(GOBIN_DIR)/protoc-gen-gofast
 
-all: Makefile test exe
+PROTO_DEFS  := $(wildcard api/*.proto)
+PROTO_IMPLS := $(patsubst %.proto,%.pb.go,$(PROTO_DEFS))
 
-test:
-	@go test -cover $(PKGS)
+.PHONY: all test exe clean docker vet deps pb-clean
 
-exe: $(BUILD_DIR)
-	go build -o $(EXE_FILE) github.com/operable/circuit-driver
+all: test exe
+
+deps:
+	govendor sync
 
 vet:
-	go $@ $(PKGS)
+	govendor vet -x +local
 
-clean:
-	rm -rf $(BUILD_DIR)
-	find . -name "*.test" -type f | xargs rm -f
+$(PROTO_IMPLS): $(PROTO_DEFS)
+	$(PROTOC_BIN) --plugin=$(GOFAST_PROTOC_BIN) --proto_path=$(PROTO_ROOT_INCLUDE):vendor:api --gofast_out=api $^
 
-tools: $(GOFAST_PROTOC_BIN)
+test: $(PROTO_IMPLS)
+	govendor test +local -cover
+
+exe: $(PROTO_IMPLS) | $(BUILD_DIR)
+	govendor build -o $(EXE_FILE)
 
 docker:
 	make clean
 	GOOS=linux GOARCH=amd64 make exe
 	docker build -t $(DOCKER_IMAGE) .
 
+clean:
+	rm -rf $(BUILD_DIR)
+
 pb-clean:
-	rm -f api/*.pb.go
-
-pb:
-	cd ../../.. && $(PROTOC_BIN) $(PROTO_INCLUDES) --gofast_out=$(DRIVER_PROTO_PATH) $(DRIVER_PROTO_PATH)/request.proto $(DRIVER_PROTO_PATH)/result.proto
-
-$(GOFAST_PROTOC_BIN):
-	go get github.com/gogo/protobuf/protoc-gen-gofast
+	rm -f $(PROTO_IMPLS)
 
 $(BUILD_DIR):
 	mkdir -p $@
-

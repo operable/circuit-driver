@@ -1,0 +1,15 @@
+FROM operable/go:1.6.3
+
+# Explicitly *not* adding protobuf-c to the builder. If the build
+# detects that the implementations are older than the protocol
+# definitions in CI, it means you didn't actually commit the generated
+# code. Allowing the build to pass in such a scenario would be an error.
+
+# Install govendor
+# TODO: should this be in our base image instead?
+RUN go get -u github.com/kardianos/govendor
+# Add it to the path so we can call it
+ENV PATH=${GOPATH}/bin:${PATH}
+
+COPY . $GOPATH/src/github.com/operable/circuit-driver
+WORKDIR $GOPATH/src/github.com/operable/circuit-driver

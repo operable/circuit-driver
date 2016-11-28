@@ -61,80 +61,80 @@ func (m *ExecResult) GetElapsed() int64 {
 func init() {
 	proto.RegisterType((*ExecResult)(nil), "api.ExecResult")
 }
-func (m *ExecResult) Marshal() (data []byte, err error) {
+func (m *ExecResult) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
-	data = make([]byte, size)
-	n, err := m.MarshalTo(data)
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
 	if err != nil {
 		return nil, err
 	}
-	return data[:n], nil
+	return dAtA[:n], nil
 }
 
-func (m *ExecResult) MarshalTo(data []byte) (int, error) {
+func (m *ExecResult) MarshalTo(dAtA []byte) (int, error) {
 	var i int
 	_ = i
 	var l int
 	_ = l
 	if m.Stdout != nil {
-		data[i] = 0xa
+		dAtA[i] = 0xa
 		i++
-		i = encodeVarintResult(data, i, uint64(len(m.Stdout)))
-		i += copy(data[i:], m.Stdout)
+		i = encodeVarintResult(dAtA, i, uint64(len(m.Stdout)))
+		i += copy(dAtA[i:], m.Stdout)
 	}
 	if m.Stderr != nil {
-		data[i] = 0x12
+		dAtA[i] = 0x12
 		i++
-		i = encodeVarintResult(data, i, uint64(len(m.Stderr)))
-		i += copy(data[i:], m.Stderr)
+		i = encodeVarintResult(dAtA, i, uint64(len(m.Stderr)))
+		i += copy(dAtA[i:], m.Stderr)
 	}
 	if m.Success == nil {
 		return 0, new(github_com_golang_protobuf_proto.RequiredNotSetError)
 	} else {
-		data[i] = 0x18
+		dAtA[i] = 0x18
 		i++
 		if *m.Success {
-			data[i] = 1
+			dAtA[i] = 1
 		} else {
-			data[i] = 0
+			dAtA[i] = 0
 		}
 		i++
 	}
 	if m.Elapsed == nil {
 		return 0, new(github_com_golang_protobuf_proto.RequiredNotSetError)
 	} else {
-		data[i] = 0x20
+		dAtA[i] = 0x20
 		i++
-		i = encodeVarintResult(data, i, uint64(*m.Elapsed))
+		i = encodeVarintResult(dAtA, i, uint64(*m.Elapsed))
 	}
 	return i, nil
 }
 
-func encodeFixed64Result(data []byte, offset int, v uint64) int {
-	data[offset] = uint8(v)
-	data[offset+1] = uint8(v >> 8)
-	data[offset+2] = uint8(v >> 16)
-	data[offset+3] = uint8(v >> 24)
-	data[offset+4] = uint8(v >> 32)
-	data[offset+5] = uint8(v >> 40)
-	data[offset+6] = uint8(v >> 48)
-	data[offset+7] = uint8(v >> 56)
+func encodeFixed64Result(dAtA []byte, offset int, v uint64) int {
+	dAtA[offset] = uint8(v)
+	dAtA[offset+1] = uint8(v >> 8)
+	dAtA[offset+2] = uint8(v >> 16)
+	dAtA[offset+3] = uint8(v >> 24)
+	dAtA[offset+4] = uint8(v >> 32)
+	dAtA[offset+5] = uint8(v >> 40)
+	dAtA[offset+6] = uint8(v >> 48)
+	dAtA[offset+7] = uint8(v >> 56)
 	return offset + 8
 }
-func encodeFixed32Result(data []byte, offset int, v uint32) int {
-	data[offset] = uint8(v)
-	data[offset+1] = uint8(v >> 8)
-	data[offset+2] = uint8(v >> 16)
-	data[offset+3] = uint8(v >> 24)
+func encodeFixed32Result(dAtA []byte, offset int, v uint32) int {
+	dAtA[offset] = uint8(v)
+	dAtA[offset+1] = uint8(v >> 8)
+	dAtA[offset+2] = uint8(v >> 16)
+	dAtA[offset+3] = uint8(v >> 24)
 	return offset + 4
 }
-func encodeVarintResult(data []byte, offset int, v uint64) int {
+func encodeVarintResult(dAtA []byte, offset int, v uint64) int {
 	for v >= 1<<7 {
-		data[offset] = uint8(v&0x7f | 0x80)
+		dAtA[offset] = uint8(v&0x7f | 0x80)
 		v >>= 7
 		offset++
 	}
-	data[offset] = uint8(v)
+	dAtA[offset] = uint8(v)
 	return offset + 1
 }
 func (m *ExecResult) Size() (n int) {
@@ -170,9 +170,9 @@ func sovResult(x uint64) (n int) {
 func sozResult(x uint64) (n int) {
 	return sovResult(uint64((x << 1) ^ uint64((int64(x) >> 63))))
 }
-func (m *ExecResult) Unmarshal(data []byte) error {
+func (m *ExecResult) Unmarshal(dAtA []byte) error {
 	var hasFields [1]uint64
-	l := len(data)
+	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
 		preIndex := iNdEx
@@ -184,7 +184,7 @@ func (m *ExecResult) Unmarshal(data []byte) error {
 			if iNdEx >= l {
 				return io.ErrUnexpectedEOF
 			}
-			b := data[iNdEx]
+			b := dAtA[iNdEx]
 			iNdEx++
 			wire |= (uint64(b) & 0x7F) << shift
 			if b < 0x80 {
@@ -212,7 +212,7 @@ func (m *ExecResult) Unmarshal(data []byte) error {
 				if iNdEx >= l {
 					return io.ErrUnexpectedEOF
 				}
-				b := data[iNdEx]
+				b := dAtA[iNdEx]
 				iNdEx++
 				byteLen |= (int(b) & 0x7F) << shift
 				if b < 0x80 {
@@ -226,7 +226,7 @@ func (m *ExecResult) Unmarshal(data []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Stdout = append(m.Stdout[:0], data[iNdEx:postIndex]...)
+			m.Stdout = append(m.Stdout[:0], dAtA[iNdEx:postIndex]...)
 			if m.Stdout == nil {
 				m.Stdout = []byte{}
 			}
@@ -243,7 +243,7 @@ func (m *ExecResult) Unmarshal(data []byte) error {
 				if iNdEx >= l {
 					return io.ErrUnexpectedEOF
 				}
-				b := data[iNdEx]
+				b := dAtA[iNdEx]
 				iNdEx++
 				byteLen |= (int(b) & 0x7F) << shift
 				if b < 0x80 {
@@ -257,7 +257,7 @@ func (m *ExecResult) Unmarshal(data []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Stderr = append(m.Stderr[:0], data[iNdEx:postIndex]...)
+			m.Stderr = append(m.Stderr[:0], dAtA[iNdEx:postIndex]...)
 			if m.Stderr == nil {
 				m.Stderr = []byte{}
 			}
@@ -274,7 +274,7 @@ func (m *ExecResult) Unmarshal(data []byte) error {
 				if iNdEx >= l {
 					return io.ErrUnexpectedEOF
 				}
-				b := data[iNdEx]
+				b := dAtA[iNdEx]
 				iNdEx++
 				v |= (int(b) & 0x7F) << shift
 				if b < 0x80 {
@@ -296,7 +296,7 @@ func (m *ExecResult) Unmarshal(data []byte) error {
 				if iNdEx >= l {
 					return io.ErrUnexpectedEOF
 				}
-				b := data[iNdEx]
+				b := dAtA[iNdEx]
 				iNdEx++
 				v |= (int64(b) & 0x7F) << shift
 				if b < 0x80 {
@@ -307,7 +307,7 @@ func (m *ExecResult) Unmarshal(data []byte) error {
 			hasFields[0] |= uint64(0x00000002)
 		default:
 			iNdEx = preIndex
-			skippy, err := skipResult(data[iNdEx:])
+			skippy, err := skipResult(dAtA[iNdEx:])
 			if err != nil {
 				return err
 			}
@@ -332,8 +332,8 @@ func (m *ExecResult) Unmarshal(data []byte) error {
 	}
 	return nil
 }
-func skipResult(data []byte) (n int, err error) {
-	l := len(data)
+func skipResult(dAtA []byte) (n int, err error) {
+	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
 		var wire uint64
@@ -344,7 +344,7 @@ func skipResult(data []byte) (n int, err error) {
 			if iNdEx >= l {
 				return 0, io.ErrUnexpectedEOF
 			}
-			b := data[iNdEx]
+			b := dAtA[iNdEx]
 			iNdEx++
 			wire |= (uint64(b) & 0x7F) << shift
 			if b < 0x80 {
@@ -362,7 +362,7 @@ func skipResult(data []byte) (n int, err error) {
 					return 0, io.ErrUnexpectedEOF
 				}
 				iNdEx++
-				if data[iNdEx-1] < 0x80 {
+				if dAtA[iNdEx-1] < 0x80 {
 					break
 				}
 			}
@@ -379,7 +379,7 @@ func skipResult(data []byte) (n int, err error) {
 				if iNdEx >= l {
 					return 0, io.ErrUnexpectedEOF
 				}
-				b := data[iNdEx]
+				b := dAtA[iNdEx]
 				iNdEx++
 				length |= (int(b) & 0x7F) << shift
 				if b < 0x80 {
@@ -402,7 +402,7 @@ func skipResult(data []byte) (n int, err error) {
 					if iNdEx >= l {
 						return 0, io.ErrUnexpectedEOF
 					}
-					b := data[iNdEx]
+					b := dAtA[iNdEx]
 					iNdEx++
 					innerWire |= (uint64(b) & 0x7F) << shift
 					if b < 0x80 {
@@ -413,7 +413,7 @@ func skipResult(data []byte) (n int, err error) {
 				if innerWireType == 4 {
 					break
 				}
-				next, err := skipResult(data[start:])
+				next, err := skipResult(dAtA[start:])
 				if err != nil {
 					return 0, err
 				}
@@ -437,17 +437,19 @@ var (
 	ErrIntOverflowResult   = fmt.Errorf("proto: integer overflow")
 )
 
+func init() { proto.RegisterFile("result.proto", fileDescriptorResult) }
+
 var fileDescriptorResult = []byte{
-	// 165 bytes of a gzipped FileDescriptorProto
+	// 172 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0xe2, 0xe2, 0x29, 0x4a, 0x2d, 0x2e,
 	0xcd, 0x29, 0xd1, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x62, 0x4e, 0x2c, 0xc8, 0x94, 0xd2, 0x4d,
 	0xcf, 0x2c, 0xc9, 0x28, 0x4d, 0xd2, 0x4b, 0xce, 0xcf, 0xd5, 0x4f, 0xcf, 0x4f, 0xcf, 0xd7, 0x07,
-	0xcb, 0x25, 0x95, 0xa6, 0x81, 0x79, 0x60, 0x0e, 0x98, 0x05, 0xd1, 0xa3, 0x14, 0xc2, 0xc5, 0xe5,
-	0x5a, 0x91, 0x9a, 0x1c, 0x04, 0x36, 0x47, 0x88, 0x8f, 0x8b, 0xad, 0xb8, 0x24, 0x25, 0xbf, 0xb4,
-	0x44, 0x82, 0x51, 0x81, 0x51, 0x83, 0x07, 0xca, 0x4f, 0x2d, 0x2a, 0x92, 0x60, 0x02, 0xf3, 0xf9,
-	0xb9, 0xd8, 0x8b, 0x4b, 0x93, 0x93, 0x53, 0x8b, 0x8b, 0x25, 0x98, 0x15, 0x98, 0x34, 0x38, 0x40,
-	0x02, 0xa9, 0x39, 0x89, 0x05, 0xc5, 0xa9, 0x29, 0x12, 0x2c, 0x0a, 0x4c, 0x1a, 0xcc, 0x56, 0x2c,
-	0x17, 0x16, 0xca, 0x33, 0x38, 0x09, 0x9c, 0x78, 0x24, 0xc7, 0x78, 0xe1, 0x91, 0x1c, 0xe3, 0x83,
-	0x47, 0x72, 0x8c, 0x33, 0x1e, 0xcb, 0x31, 0x00, 0x02, 0x00, 0x00, 0xff, 0xff, 0xa2, 0xc6, 0x45,
-	0x85, 0xaa, 0x00, 0x00, 0x00,
+	0xcb, 0x25, 0x95, 0xa6, 0x81, 0x79, 0x60, 0x0e, 0x98, 0x05, 0xd1, 0xa3, 0x54, 0xc6, 0xc5, 0xe5,
+	0x5a, 0x91, 0x9a, 0x1c, 0x04, 0x36, 0x47, 0x48, 0x8c, 0x8b, 0xad, 0xb8, 0x24, 0x25, 0xbf, 0xb4,
+	0x44, 0x82, 0x51, 0x81, 0x51, 0x83, 0x27, 0x08, 0xca, 0x83, 0x8a, 0xa7, 0x16, 0x15, 0x49, 0x30,
+	0xc1, 0xc5, 0x81, 0x3c, 0x21, 0x09, 0x2e, 0xf6, 0xe2, 0xd2, 0xe4, 0xe4, 0xd4, 0xe2, 0x62, 0x09,
+	0x66, 0x05, 0x26, 0x0d, 0x8e, 0x20, 0x18, 0x17, 0x24, 0x93, 0x9a, 0x93, 0x58, 0x50, 0x9c, 0x9a,
+	0x22, 0xc1, 0x02, 0x94, 0x61, 0x0e, 0x82, 0x71, 0xad, 0x58, 0x2e, 0x2c, 0x94, 0x67, 0x70, 0x12,
+	0x38, 0xf1, 0x48, 0x8e, 0xf1, 0x02, 0x10, 0x3f, 0x00, 0xe2, 0x19, 0x8f, 0xe5, 0x18, 0x00, 0x01,
+	0x00, 0x00, 0xff, 0xff, 0x80, 0x71, 0x96, 0xd9, 0xcc, 0x00, 0x00, 0x00,
 }

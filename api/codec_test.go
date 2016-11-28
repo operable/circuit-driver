@@ -38,7 +38,7 @@ func TestDecode(t *testing.T) {
 		t.Error(err)
 	}
 	if requestOut.GetExecutable() != requestIn.GetExecutable() {
-		t.Errorf("Unexpected Executable value: %s", requestOut.Executable)
+		t.Errorf("Unexpected Executable value: %s", requestOut.GetExecutable())
 	}
 	if len(requestOut.Env) != 1 {
 		t.Errorf("Unexpected env length: %d", len(requestOut.Env))
