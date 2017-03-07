@@ -1,7 +1,5 @@
 # circuit-driver
 
-[![Build status](https://badge.buildkite.com/5e3d14a67525f02ccc31018c05fb47bb1952d1165904054dd5.svg?branch=master)](https://buildkite.com/operable/circuit-driver)
-
 ## Building Locally
 
 ### Prerequisites
