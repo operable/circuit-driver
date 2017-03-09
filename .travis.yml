@@ -6,9 +6,13 @@ services:
 before_install:
   - docker build -t operable/circuit-driver-testing -f Dockerfile.ci .
 
+# Parallelize these tasks
+env:
+  - TARGET=vet
+  - TARGET=test
+
 script:
-  - docker run -it --rm operable/circuit-driver-testing make vet
-  - docker run -it --rm operable/circuit-driver-testing make test
+  - docker run -it --rm operable/circuit-driver-testing make $TARGET
 
 notifications:
   slack:
