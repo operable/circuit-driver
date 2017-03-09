@@ -1,5 +1,7 @@
 # circuit-driver
 
+[![Build Status](https://travis-ci.org/operable/circuit-driver.svg?branch=master)](https://travis-ci.org/operable/circuit-driver)
+
 ## Building Locally
 
 ### Prerequisites
