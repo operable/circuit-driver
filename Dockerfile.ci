@@ -11,5 +11,8 @@ RUN go get -u github.com/kardianos/govendor
 # Add it to the path so we can call it
 ENV PATH=${GOPATH}/bin:${PATH}
 
+# Add goveralls for sending stats to coveralls.io in Travis CI
+RUN go get github.com/mattn/goveralls
+
 COPY . $GOPATH/src/github.com/operable/circuit-driver
 WORKDIR $GOPATH/src/github.com/operable/circuit-driver

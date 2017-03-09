@@ -31,6 +31,11 @@ $(PROTO_IMPLS): $(PROTO_DEFS)
 test: $(PROTO_IMPLS)
 	govendor test +local -cover
 
+# This is only intended to run in Travis CI and requires goveralls to
+# be installed.
+ci-coveralls: $(PROTO_IMPLS)
+	goveralls -service=travis-ci
+
 exe: $(PROTO_IMPLS) | $(BUILD_DIR)
 	govendor build -o $(EXE_FILE)
 
